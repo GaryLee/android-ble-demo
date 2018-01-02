@@ -3,6 +3,8 @@ package tw.idv.dev.garylee.androidbledemo
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 
@@ -21,8 +23,9 @@ class MainActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
 
-        // Example of a call to a native method
-        sample_text.text = stringFromJNI()
+        deviceList.layoutManager = LinearLayoutManager(this)
+        deviceList.adapter = DeviceListAdapter()
+        deviceList.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

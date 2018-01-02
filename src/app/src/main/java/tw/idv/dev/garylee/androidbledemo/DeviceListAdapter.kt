@@ -1,20 +1,49 @@
 package tw.idv.dev.garylee.androidbledemo
 
 import android.content.Context
-import android.text.Layout
+import android.content.res.Resources
+import android.graphics.Typeface
+import android.support.v4.content.res.ResourcesCompat
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import kotlinx.android.synthetic.main.device_list_row.*
+import kotlinx.android.synthetic.main.device_list_row.view.*
+import java.util.*
 
-/**
- * Created by garylee on 2017/12/30.
- */
-class DeviceListAdapter(var context: Context): BaseAdapter() {
-    override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
-        val inflater = LayoutInflater.from(context)
-        val inflate = inflater.inflate(R.layout.device_list_row, null)
-        return inflate
+
+class DeviceListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.device_list_row, parent, false)
+        return Item(view)
+    }
+
+    override fun getItemCount(): Int {
+        return 10
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as Item).bind(
+                position.toString(),
+                uuid=UUID.randomUUID(),
+                connected=((position % 2) == 0),
+                notes=listOf("new", "bind", "beacon", "power")
+        )
+    }
+
+    class Item(itemView: View): RecyclerView.ViewHolder(itemView) {
+        fun getIconText(connected: Boolean) = itemView.context.getString(if (connected) R.string.fa_bluetooth else R.string.fa_bluetooth_b)
+
+        fun bind(name: String, uuid: UUID, connected: Boolean, notes: List<String>) {
+            if (connected) {
+                itemView.icon.setTextColor(itemView.context.getColor(R.color.bleNoteInfo))
+            }
+            itemView.icon.text = getIconText(connected)
+            itemView.deviceName.text = name
+            itemView.deviceUuid.text = uuid.toString()
+            for (i in 0 until 4) {
+                itemView.note0.text = if (i < notes.count()) notes[i] else ""
+            }
+        }
     }
 }
