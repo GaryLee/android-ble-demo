@@ -3,4 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="fa_bluetooth">&#xf293;</string>
     <string name="fa_bluetooth_b">&#xf294;</string>
+    <string name="mdi_bluetooth">&#xf0af;</string>
+    <string name="mdi_bluetooth_audio">&#xf0b0;</string>
+    <string name="mdi_bluetooth_connect">&#xf0b1;</string>
+    <string name="mdi_bluetooth_off">&#xf0b2;</string>
+    <string name="mdi_bluetooth_settings">&#xf0b3;</string>
+    <string name="mdi_bluetooth_transfer">&#xf0b4;</string>
 </resources>

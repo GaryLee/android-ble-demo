@@ -32,7 +32,7 @@ class DeviceListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     class Item(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun getIconText(connected: Boolean) = itemView.context.getString(if (connected) R.string.fa_bluetooth else R.string.fa_bluetooth_b)
+        fun getIconText(connected: Boolean) = itemView.context.getString(if (connected) R.string.mdi_bluetooth_connect else R.string.mdi_bluetooth)
 
         fun bind(name: String, uuid: UUID, connected: Boolean, notes: List<String>) {
             if (connected) {

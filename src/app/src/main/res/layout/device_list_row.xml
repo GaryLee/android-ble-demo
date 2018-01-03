@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:contentDescription="ICON"
-        android:fontFamily="@font/fontawesome_webfont"
+        android:fontFamily="@font/materialdesign_webfont"
         android:gravity="center_vertical|center_horizontal"
         android:text=" X "
         android:textAlignment="center"
@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/fa_bluetooth_b" />
+        tools:text="@string/mdi_bluetooth" />
 
     <TextView
         android:id="@+id/deviceName"
