@@ -1,26 +1,32 @@
 package tw.idv.dev.garylee.androidbledemo
 
-import android.content.Context
-import android.content.res.Resources
-import android.graphics.Typeface
-import android.support.v4.content.res.ResourcesCompat
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.device_list_row.view.*
 import java.util.*
 
+data class BleDeviceItem(
+        val name: String,
+        val address: String,
+        val type: Int,
+        val rssi: Float
+)
 
 class DeviceListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    val deviceItemList = mutableListOf<BleDeviceItem>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.device_list_row, parent, false)
         return Item(view)
     }
 
-    override fun getItemCount(): Int {
-        return 10
-    }
+    override fun getItemCount() = deviceItemList.count()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as Item).bind(
@@ -46,4 +52,20 @@ class DeviceListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
     }
+}
+
+/**
+ * Start to scan devices.
+ */
+fun DeviceListAdapter.startScanDevices(bluetoothAdapter: BluetoothAdapter, maxDevicesNumber: Int) {
+    if (!bluetoothAdapter.isEnabled) {
+        return
+    }
+    val scanCallback = object:ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            // super.onScanResult(callbackType, result)
+            Log.d("ScanDeviceActivity", "onScanResult(): ${result?.device?.address} - ${result?.device?.name}")
+        }
+    }
+    bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
 }
