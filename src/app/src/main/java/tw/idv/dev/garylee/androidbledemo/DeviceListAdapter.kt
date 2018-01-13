@@ -1,6 +1,7 @@
 package tw.idv.dev.garylee.androidbledemo
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Intent
@@ -19,7 +20,7 @@ data class BleDeviceItem(
         val rssi: Float
 )
 
-class DeviceListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DeviceListAdapter(val bluetoothManager: BluetoothManager): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val deviceItemList = mutableListOf<BleDeviceItem>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.device_list_row, parent, false)
@@ -57,15 +58,25 @@ class DeviceListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 /**
  * Start to scan devices.
  */
-fun DeviceListAdapter.startScanDevices(bluetoothAdapter: BluetoothAdapter, maxDevicesNumber: Int) {
-    if (!bluetoothAdapter.isEnabled) {
-        return
+fun DeviceListAdapter.startScanDevices(): Boolean {
+    val bluetoothAdapter = bluetoothManager.adapter
+    if (bluetoothAdapter == null) {
+        Log.d("startScanDevices", "bluetoothAdapter is null")
+        return false
+    }
+    if (!bluetoothAdapter.enable()) {
+        if (!bluetoothAdapter.isEnabled()) {
+            Log.d("startScanDevices", "bluetoothAdapter is not enabled.")
+            return false
+        }
     }
     val scanCallback = object:ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             // super.onScanResult(callbackType, result)
-            Log.d("ScanDeviceActivity", "onScanResult(): ${result?.device?.address} - ${result?.device?.name}")
+            Log.d("startScanDevices", "onScanResult(): ${result?.device?.address} - ${result?.device?.name}")
         }
     }
     bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
+        return true
+
 }
