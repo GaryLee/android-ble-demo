@@ -2,15 +2,18 @@ package tw.idv.dev.garylee.androidbledemo
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -29,9 +32,25 @@ class MainActivity : AppCompatActivity() {
         val bluetoothManager = applicationContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         deviceList.adapter = DeviceListAdapter(bluetoothManager)
         fab.setOnClickListener { view -> onFabClick(view) }
+
+        val locationPermissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (locationPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Snackbar.make(main_layout, "Need ACCESS_FIND_LOCATION permission for BLE.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show()
+            } else {
+                ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION),
+                        1)
+                // TODO: should check the result of request permission.
+            }
+        }
     }
 
     fun onFabClick(view: View) {
+        Log.d("fabClick", "User click the FAB.")
         val canStartScan = (deviceList.adapter as DeviceListAdapter).startScanDevices()
         if (!canStartScan) {
             Snackbar.make(view, "Cannot start BLE device scanning. No permission?", Snackbar.LENGTH_LONG)

@@ -77,6 +77,5 @@ fun DeviceListAdapter.startScanDevices(): Boolean {
         }
     }
     bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
-        return true
-
+    return true
 }
