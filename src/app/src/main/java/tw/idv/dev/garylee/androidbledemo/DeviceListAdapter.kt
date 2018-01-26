@@ -1,6 +1,7 @@
 package tw.idv.dev.garylee.androidbledemo
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -17,7 +18,7 @@ data class BleDeviceItem(
         val name: String,
         val address: String,
         val type: Int,
-        val rssi: Float
+        val rssi: Double
 )
 
 class DeviceListAdapter(val bluetoothManager: BluetoothManager): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -73,7 +74,14 @@ fun DeviceListAdapter.startScanDevices(): Boolean {
     val scanCallback = object:ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             // super.onScanResult(callbackType, result)
-            Log.d("startScanDevices", "onScanResult(): ${result?.device?.address} - ${result?.device?.name}")
+            if (result == null || result.device == null) {
+                Log.d("startScanDevices", "result is null or result.device is null.")
+                return
+            }
+            val deviceName = if (result.device.name == null) "Noname" else result.device.name
+            Log.d("startScanDevices", "onScanResult(): ${result.device.address} - ${deviceName}")
+            deviceItemList.add(BleDeviceItem(deviceName, result.device.address, 0, 0.0))
+            notifyDataSetChanged()
         }
     }
     bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
